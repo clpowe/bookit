@@ -1,8 +1,8 @@
 'use client'
 
 import Link from "next/link";
-import { useEffect, useActionState } from 'react';
 import { useRouter } from 'next/navigation';
+import { useActionState, useEffect } from 'react'
 import { toast } from 'react-toastify';
 import { createSession } from '@/app/actions/createSession';
 
@@ -12,6 +12,7 @@ export default function LoginPage() {
 	const router = useRouter();
 
 	useEffect(() => {
+		console.log('state: ', state);
 		if (state.error) toast.error(state.error);
 		if (state.success) {
 			toast.success('Successfully logged in');

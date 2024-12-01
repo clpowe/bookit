@@ -7,10 +7,10 @@ import { redirect } from 'next/navigation'
 
 async function getAllRooms() {
 	try {
-		const { database } = await createAdminClient()
+		const { databases } = await createAdminClient()
 
 		// Fetch all rooms
-		const { documents: rooms } = await database.listDocuments(
+		const { documents: rooms } = await databases.listDocuments(
 			process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
 			process.env.NEXT_PUBLIC_APPWRITE_COLLECTIONS_ROOMS
 		)
