@@ -5,7 +5,7 @@ import { ID } from 'node-appwrite'
 import { revalidatePath } from 'next/cache'
 
 export default async function createRoom(previousState, formData) {
-	const { databases } = await createAdminClient()
+	const { databases, storage } = await createAdminClient()
 
 	try {
 		const { user } = await checkAuth();
@@ -15,6 +15,27 @@ export default async function createRoom(previousState, formData) {
 				error: 'You must be logged in to create a room'
 			}
 		}
+
+
+		// Upload image
+		let imageID
+
+		const image = formData.get('image')
+
+		if (image && image.size > 0 && image.name !== 'undefined') {
+			try {
+				const response = await storage.createFile('rooms', ID.unique(), image)
+				imageID = response.$id
+			} catch (error) {
+				console.log('Error uploading image', error)
+				return {
+					error: 'Error uploading image'
+				}
+			}
+		} else {
+			console.log('No image file provided or file is empty')
+		}
+
 
 		const newRoom = await databases.createDocument(
 			process.env.NEXT_PUBLIC_APPWRITE_DATABASE,
@@ -31,6 +52,7 @@ export default async function createRoom(previousState, formData) {
 				location: formData.get('location'),
 				availability: formData.get('availability'),
 				amenities: formData.get('amenities'),
+				image: imageID
 			}
 		)
 
