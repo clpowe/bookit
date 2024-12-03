@@ -14,8 +14,6 @@ async function getMyRooms() {
 		redirect('/login')
 	}
 
-
-
 	try {
 		const { account, databases } = await createSessionClient(sessionCookie.value)
 
